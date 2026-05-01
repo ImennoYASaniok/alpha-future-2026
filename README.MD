@@ -10,27 +10,17 @@
 - **Frontend**: React (Vite)
 - **Infra**: Docker Compose (2 контейнера: `web` + `db`)
 
-## Структура
-
-- `backend/` — FastAPI приложение
-- `frontend/` — React приложение (собирается в `dist/`)
-- `docker-compose.yml` — запуск `web` и `db`
-
 ## Запуск
-
-1. Скопируй переменные окружения:
 
 ```bash
 copy .env.example .env
 ```
 
-2. Запусти:
-
 ```bash
 docker compose up --build
 ```
 
-3. Открой:
+3. Адреса:
 
 - `http://localhost:8000` — стартовая страница
 - `http://localhost:8000/api/health` — health-check
