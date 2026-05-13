@@ -1,50 +1,75 @@
+import { useState } from 'react'
+import Screen1 from './screens/Screen1'
+import Screen2 from './screens/Screen2'
+import Screen3 from './screens/Screen3'
+import Screen4 from './screens/Screen4'
+import Screen5 from './screens/Screen5'
+import Screen6 from './screens/Screen6'
+import './App.css'
+
 export default function App() {
+  const [currentScreen, setCurrentScreen] = useState(1)
+  const [answers, setAnswers] = useState({
+    age: '',
+    income: '',
+    purpose: ''
+  })
+
+  const handleAnswers = (newAnswers) => {
+    setAnswers(prev => ({ ...prev, ...newAnswers }))
+  }
+
+  const nextScreen = () => {
+    setCurrentScreen(prev => Math.min(prev + 1, 6))
+  }
+
+  const prevScreen = () => {
+    setCurrentScreen(prev => Math.max(prev - 1, 1))
+  }
+
+  const goToScreen = (screen) => {
+    setCurrentScreen(screen)
+  }
+
   return (
-    <div className="page">
-      <header className="header">
-        <div className="brand">Alpha Future</div>
-        <nav className="nav">
-          <a className="navLink" href="#scenario">Сценарий</a>
-          <a className="navLink" href="#mvp">MVP</a>
-          <a className="navLink" href="#demo">Демо</a>
-        </nav>
-      </header>
-
-      <main className="main">
-        <section className="hero">
-          <h1 className="title">Банковское приложение будущего</h1>
-          <p className="subtitle">
-            Прототип для молодой аудитории: понятный сценарий, подсказки и быстрые действия.
-          </p>
-          <div className="ctaRow">
-            <a className="button" href="/api/health">Проверить API</a>
-            <a className="button secondary" href="/api/db/ping">Проверить БД</a>
-          </div>
-        </section>
-
-        <section id="scenario" className="card">
-          <h2>Фокус сценария</h2>
-          <p>
-            Здесь будет выбранный сценарий (например: первый вход, выбор продукта, подсказки или управление деньгами) и его логика.
-          </p>
-        </section>
-
-        <section id="mvp" className="card">
-          <h2>MVP</h2>
-          <p>
-            Минимальная реализация: фронтенд-страница + backend API + подключение к PostgreSQL в Docker.
-          </p>
-        </section>
-
-        <section id="demo" className="card">
-          <h2>Демо</h2>
-          <p>
-            После запуска Docker: открой <code>http://localhost:8000</code>.
-          </p>
-        </section>
-      </main>
-
-      <footer className="footer">© {new Date().getFullYear()} Alpha Future</footer>
+    <div className="app-container">
+      {currentScreen === 1 && (
+        <Screen1 onNext={nextScreen} />
+      )}
+      {currentScreen === 2 && (
+        <Screen2
+          onNext={nextScreen}
+          onBack={prevScreen}
+          answers={answers}
+          onAnswersChange={handleAnswers}
+        />
+      )}
+      {currentScreen === 3 && (
+        <Screen3
+          onNext={nextScreen}
+          onBack={prevScreen}
+          answers={answers}
+        />
+      )}
+      {currentScreen === 4 && (
+        <Screen4
+          onNext={nextScreen}
+          onBack={prevScreen}
+        />
+      )}
+      {currentScreen === 5 && (
+        <Screen5
+          onNext={nextScreen}
+          onBack={prevScreen}
+          onGoToScreen={goToScreen}
+        />
+      )}
+      {currentScreen === 6 && (
+        <Screen6
+          onBack={prevScreen}
+          onRestart={() => goToScreen(1)}
+        />
+      )}
     </div>
   )
 }
