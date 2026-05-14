@@ -1,19 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Screen1 from './screens/Screen1'
 import Screen2 from './screens/Screen2'
 import Screen3 from './screens/Screen3'
 import Screen4 from './screens/Screen4'
 import Screen5 from './screens/Screen5'
 import Screen6 from './screens/Screen6'
+import {
+  loadPersistedState,
+  savePersistedState,
+  clearPersistedState,
+  emptyAnswers
+} from './utils/persistState'
 import './App.css'
 
+function getInitialState() {
+  const persisted = loadPersistedState()
+  if (persisted) {
+    return {
+      currentScreen: persisted.currentScreen,
+      answers: persisted.answers
+    }
+  }
+  return { currentScreen: 1, answers: emptyAnswers() }
+}
+
+const initial = getInitialState()
+
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState(1)
-  const [answers, setAnswers] = useState({
-    age: '',
-    income: '',
-    purpose: ''
-  })
+  const [currentScreen, setCurrentScreen] = useState(initial.currentScreen)
+  const [onboardingResetKey, setOnboardingResetKey] = useState(0)
+  const [answers, setAnswers] = useState(initial.answers)
+
+  useEffect(() => {
+    savePersistedState(currentScreen, answers)
+  }, [currentScreen, answers])
 
   const handleAnswers = (newAnswers) => {
     setAnswers(prev => ({ ...prev, ...newAnswers }))
@@ -42,12 +62,23 @@ export default function App() {
           onBack={prevScreen}
           answers={answers}
           onAnswersChange={handleAnswers}
+          onboardingResetKey={onboardingResetKey}
         />
       )}
       {currentScreen === 3 && (
         <Screen3
           onNext={nextScreen}
           onBack={prevScreen}
+          onEditAnswers={() => {
+            setOnboardingResetKey((k) => k + 1)
+            goToScreen(2)
+          }}
+          onTryLater={() => {
+            setAnswers(emptyAnswers())
+            setOnboardingResetKey(0)
+            clearPersistedState()
+            goToScreen(1)
+          }}
           answers={answers}
         />
       )}
@@ -62,12 +93,18 @@ export default function App() {
           onNext={nextScreen}
           onBack={prevScreen}
           onGoToScreen={goToScreen}
+          answers={answers}
         />
       )}
       {currentScreen === 6 && (
         <Screen6
           onBack={prevScreen}
-          onRestart={() => goToScreen(1)}
+          onRestart={() => {
+            setAnswers(emptyAnswers())
+            setOnboardingResetKey(0)
+            clearPersistedState()
+            goToScreen(1)
+          }}
         />
       )}
     </div>

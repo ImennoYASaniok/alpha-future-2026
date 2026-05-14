@@ -1,7 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-export default function Screen2({ onNext, onBack, answers, onAnswersChange }) {
+const HINTS = {
+  1: 'Возраст влияет на лимит и вероятность одобрения.',
+  2: 'Без официального дохода лимит будет меньше, но первая карта возможна.',
+  3: 'Цель поможет подобрать подходящий лимит и условия.'
+}
+
+export default function Screen2({ onNext, onBack, answers, onAnswersChange, onboardingResetKey = 0 }) {
   const [step, setStep] = useState(1)
+
+  useEffect(() => {
+    if (onboardingResetKey > 0) {
+      setStep(1)
+    }
+  }, [onboardingResetKey])
 
   const handleAgeSelect = (value) => {
     onAnswersChange({ age: value })
@@ -36,14 +48,15 @@ export default function Screen2({ onNext, onBack, answers, onAnswersChange }) {
         {step === 1 && (
           <div className="question-step fade-in">
             <h2 className="question-title">Сколько тебе лет?</h2>
+            <p className="question-hint">{HINTS[1]}</p>
             <div className="options-list">
-              <button className="option-button" onClick={() => handleAgeSelect('18-20')}>
+              <button type="button" className="option-button" onClick={() => handleAgeSelect('18-20')}>
                 18–20
               </button>
-              <button className="option-button" onClick={() => handleAgeSelect('21-23')}>
+              <button type="button" className="option-button" onClick={() => handleAgeSelect('21-23')}>
                 21–23
               </button>
-              <button className="option-button" onClick={() => handleAgeSelect('24-25')}>
+              <button type="button" className="option-button" onClick={() => handleAgeSelect('24-25')}>
                 24–25
               </button>
             </div>
@@ -52,15 +65,16 @@ export default function Screen2({ onNext, onBack, answers, onAnswersChange }) {
 
         {step === 2 && (
           <div className="question-step fade-in">
-            <h2 className="question-title">Есть ли доход?</h2>
+            <h2 className="question-title">Есть ли официальный доход?</h2>
+            <p className="question-hint">{HINTS[2]}</p>
             <div className="options-list">
-              <button className="option-button" onClick={() => handleIncomeSelect('работаю')}>
-                Работаю
+              <button type="button" className="option-button" onClick={() => handleIncomeSelect('работаю')}>
+                Работаю по найму
               </button>
-              <button className="option-button" onClick={() => handleIncomeSelect('фриланс')}>
+              <button type="button" className="option-button" onClick={() => handleIncomeSelect('фриланс')}>
                 Фриланс/подработки
               </button>
-              <button className="option-button" onClick={() => handleIncomeSelect('нет')}>
+              <button type="button" className="option-button" onClick={() => handleIncomeSelect('нет')}>
                 Учусь, дохода нет
               </button>
             </div>
@@ -69,22 +83,31 @@ export default function Screen2({ onNext, onBack, answers, onAnswersChange }) {
 
         {step === 3 && (
           <div className="question-step fade-in">
-            <h2 className="question-title">Зачем карта?</h2>
+            <h2 className="question-title">Зачем тебе кредитная карта?</h2>
+            <p className="question-hint">{HINTS[3]}</p>
             <div className="options-list">
-              <button className="option-button" onClick={() => handlePurposeSelect('повседневные')}>
+              <button
+                type="button"
+                className="option-button"
+                onClick={() => handlePurposeSelect('повседневные')}
+              >
                 Повседневные покупки
               </button>
-              <button className="option-button" onClick={() => handlePurposeSelect('крупная')}>
+              <button type="button" className="option-button" onClick={() => handlePurposeSelect('крупная')}>
                 Крупная покупка
               </button>
-              <button className="option-button" onClick={() => handlePurposeSelect('попробовать')}>
+              <button
+                type="button"
+                className="option-button"
+                onClick={() => handlePurposeSelect('попробовать')}
+              >
                 Просто хочу попробовать
               </button>
             </div>
           </div>
         )}
 
-        <button className="button secondary back-button" onClick={goBack}>
+        <button type="button" className="button secondary back-button" onClick={goBack}>
           Назад
         </button>
       </div>

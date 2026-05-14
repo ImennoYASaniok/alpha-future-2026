@@ -1,60 +1,81 @@
-export default function Screen3({ onNext, onBack, answers }) {
-  const calculateProbability = () => {
-    if (answers.income === 'работаю') {
-      return 'высокая'
-    }
-    if (answers.income === 'фриланс') {
-      return 'средняя'
-    }
-    if (answers.income === 'нет') {
-      if (answers.age === '18-20') {
-        return 'низкая'
-      }
-      return 'средняя'
-    }
-    return 'средняя'
-  }
+import { getForecast } from '../utils/forecast'
+import { getForecastExplanation } from '../utils/forecastCopy'
+import { rubAmount } from '../utils/formatRub'
 
-  const getExplanation = (probability) => {
-    if (probability === 'высокая') {
-      return 'С твоими доходами шансы на одобрение отличные. Банки охотно выдают первую карту.'
-    }
-    if (probability === 'средняя') {
-      return 'Без официального дохода банки одобряют реже, но для первой карты с лимитом до 10 000 ₽ это реально.'
-    }
-    return 'Для твоего возраста без официального дохода одобрение сложнее, но попробуй с небольшим лимитом.'
-  }
+const PROBABILITY_COLOR = {
+  высокая: 'var(--success)',
+  средняя: 'var(--warning)',
+  низкая: 'var(--error)'
+}
 
-  const probability = calculateProbability()
-  const explanation = getExplanation(probability)
-
-  const getProbabilityColor = () => {
-    if (probability === 'высокая') return '#4CAF50'
-    if (probability === 'средняя') return '#FF9800'
-    return '#F44336'
-  }
+export default function Screen3({ onNext, onBack, onEditAnswers, onTryLater, answers }) {
+  const { probability, limitCap } = getForecast(answers)
+  const explanation = getForecastExplanation(probability, answers, limitCap)
 
   return (
     <div className="screen screen-3">
       <div className="screen-content">
-        <h2 className="screen-title">Честный прогноз одобрения</h2>
+        <div>
+          <h2 className="screen-title">Честный прогноз одобрения</h2>
+          <p className="screen-subtitle">
+            На основе твоих ответов — без заявки и без влияния на кредитную историю.
+          </p>
+        </div>
 
         <div className="probability-indicator">
-          <div className="probability-label">Вероятность одобрения:</div>
-          <div className="probability-value" style={{ color: getProbabilityColor() }}>
+          <div className="probability-label">Вероятность одобрения</div>
+          <div
+            className="probability-value"
+            style={{ color: PROBABILITY_COLOR[probability] }}
+          >
             {probability}
           </div>
         </div>
 
         <p className="explanation-text">{explanation}</p>
 
-        <button className="button primary" onClick={onNext}>
+        <div className="checklist">
+          <h3 className="checklist-title">Что учли в прогнозе</h3>
+          <ul className="checklist-items">
+            <li className="checklist-item">
+              Ориентировочный лимит:{' '}
+              <span className="nobreak-amount">до {rubAmount(limitCap)}</span>
+            </li>
+            <li className="checklist-item">Льготный период: 60 дней без процентов</li>
+            <li className="checklist-item">
+              Если платишь в льготный период — переплаты по процентам нет
+            </li>
+          </ul>
+        </div>
+
+        {probability === 'низкая' && (
+          <div className="checklist checklist--hint">
+            <h3 className="checklist-title">Что можно сделать</h3>
+            <ul className="checklist-items">
+              <li className="checklist-item">Попробовать с минимальным лимитом</li>
+              <li className="checklist-item">Подождать 6 месяцев и зайти снова с доходом</li>
+            </ul>
+          </div>
+        )}
+
+        <button type="button" className="button primary" onClick={onNext}>
           Посмотреть подходящие карты
         </button>
 
-        <button className="button secondary back-button" onClick={onBack}>
-          Назад
-        </button>
+        {probability === 'низкая' && (
+          <button type="button" className="button secondary button-full" onClick={onTryLater}>
+            Попробовать позже
+          </button>
+        )}
+
+        <div className="final-actions">
+          <button type="button" className="button secondary" onClick={onBack}>
+            Назад
+          </button>
+          <button type="button" className="button secondary" onClick={onEditAnswers}>
+            Изменить ответы
+          </button>
+        </div>
       </div>
     </div>
   )
