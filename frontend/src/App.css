@@ -251,11 +251,18 @@ a.button-link {
 }
 
 .probability-value {
-  font-size: clamp(26px, 7vw, 32px);
+  font-size: clamp(32px, 9vw, 42px);
   font-weight: 700;
-  text-transform: uppercase;
   line-height: 1.15;
   word-break: break-word;
+}
+
+.probability-category {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .explanation-text {

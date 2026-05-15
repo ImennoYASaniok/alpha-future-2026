@@ -9,8 +9,8 @@ const PROBABILITY_COLOR = {
 }
 
 export default function Screen3({ onNext, onBack, onEditAnswers, onTryLater, answers }) {
-  const { probability, limitCap } = getForecast(answers)
-  const explanation = getForecastExplanation(probability, answers, limitCap)
+  const { probability, category, limitCap } = getForecast(answers)
+  const explanation = getForecastExplanation(category, answers, limitCap)
 
   return (
     <div className="screen screen-3">
@@ -26,9 +26,15 @@ export default function Screen3({ onNext, onBack, onEditAnswers, onTryLater, ans
           <div className="probability-label">Вероятность одобрения</div>
           <div
             className="probability-value"
-            style={{ color: PROBABILITY_COLOR[probability] }}
+            style={{ color: PROBABILITY_COLOR[category] }}
           >
-            {probability}
+            {probability}%
+          </div>
+          <div
+            className="probability-category"
+            style={{ color: PROBABILITY_COLOR[category] }}
+          >
+            {category}
           </div>
         </div>
 
@@ -48,7 +54,7 @@ export default function Screen3({ onNext, onBack, onEditAnswers, onTryLater, ans
           </ul>
         </div>
 
-        {probability === 'низкая' && (
+        {category === 'низкая' && (
           <div className="checklist checklist--hint">
             <h3 className="checklist-title">Что можно сделать</h3>
             <ul className="checklist-items">
@@ -62,7 +68,7 @@ export default function Screen3({ onNext, onBack, onEditAnswers, onTryLater, ans
           Посмотреть подходящие карты
         </button>
 
-        {probability === 'низкая' && (
+        {category === 'низкая' && (
           <button type="button" className="button secondary button-full" onClick={onTryLater}>
             Попробовать позже
           </button>

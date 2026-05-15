@@ -1,10 +1,17 @@
 import { rubAmount } from './formatRub'
 
-export function getForecastExplanation(probability, answers, limitCap) {
-  if (probability === 'высокая') {
+/**
+ * Возвращает пояснение к прогнозу на основе категории и ответов пользователя.
+ *
+ * @param {string} category  — 'высокая' | 'средняя' | 'низкая'
+ * @param {object} answers   — ответы пользователя
+ * @param {number} limitCap  — рекомендованный лимит
+ */
+export function getForecastExplanation(category, answers, limitCap) {
+  if (category === 'высокая') {
     return 'С твоими доходами шансы отличные. Банки охотно выдают первую карту.'
   }
-  if (probability === 'низкая') {
+  if (category === 'низкая') {
     if (answers.income === 'нет') {
       return 'Для твоего возраста без дохода одобрение сложнее. Попробуй с небольшим лимитом или через 6 месяцев.'
     }
