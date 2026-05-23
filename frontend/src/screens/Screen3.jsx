@@ -20,6 +20,10 @@ export default function Screen3({ onNext, onBack, onEditAnswers, onTryLater, ans
           <p className="screen-subtitle">
             На основе твоих ответов — без заявки и без влияния на кредитную историю.
           </p>
+          <p className="screen-subtitle-note">
+            Для новых клиентов без истории в Альфа-Банке. 
+            Существующие клиенты получают карту в 4 клика — без этой формы.
+          </p>
         </div>
 
         <div className="probability-indicator">

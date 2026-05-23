@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { rubAmount } from '../utils/formatRub'
+import { getLimitCap } from '../utils/forecast'
 
 const ANNUAL_RATE = 0.23
 const HIGH_LIMIT_THRESHOLD = 50000
 
-export default function Screen4({ onNext, onBack }) {
-  const [limit, setLimit] = useState(10000)
-  const [monthlySpend, setMonthlySpend] = useState(5000)
+export default function Screen4({ onNext, onBack, answers }) {
+  // Получаем персональный лимит из прогноза
+  const limitCap = answers ? getLimitCap(answers.age, answers.income) : 10000
+
+  const [limit, setLimit] = useState(limitCap)
+  const [monthlySpend, setMonthlySpend] = useState(Math.min(5000, limitCap))
   const [payOnTime, setPayOnTime] = useState(true)
+
+  // Траты не могут превышать лимит
+  useEffect(() => {
+    if (monthlySpend > limit) {
+      setMonthlySpend(limit)
+    }
+  }, [limit, monthlySpend])
 
   const minPayment = Math.round(monthlySpend * 0.05)
 
@@ -35,11 +46,12 @@ export default function Screen4({ onNext, onBack }) {
             <div className="control-group">
               <label className="control-label">
                 Лимит карты: <span className="nobreak-amount">{rubAmount(limit)}</span>
+                <span className="limit-hint"> (макс. {rubAmount(limitCap)} по прогнозу)</span>
               </label>
               <input
                 type="range"
                 min={10000}
-                max={100000}
+                max={limitCap}
                 step={5000}
                 value={limit}
                 onChange={(e) => setLimit(Number(e.target.value))}
@@ -54,7 +66,7 @@ export default function Screen4({ onNext, onBack }) {
               <input
                 type="range"
                 min={1000}
-                max={50000}
+                max={limit}
                 step={1000}
                 value={monthlySpend}
                 onChange={(e) => setMonthlySpend(Number(e.target.value))}

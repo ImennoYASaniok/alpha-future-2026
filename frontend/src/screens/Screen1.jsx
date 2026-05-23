@@ -7,8 +7,12 @@ export default function Screen1({ onNext }) {
         <h1 className="screen-title">Хочу первую кредитную карту</h1>
         <p className="screen-subtitle">Разберёмся вместе — без сложных условий</p>
         <p className="screen-intro">
-          Первый кредит не должен быть пугающим. Мы покажем, как это работает, и честно скажем — одобрят
+          Первая кредитная карта не должна быть пугающей. Мы покажем, как это работает, и честно скажем — одобрят
           или нет.
+        </p>
+        <p className="screen-intro-note">
+          Для новых клиентов Альфа-Банка — без заполнения длинных форм. 
+          Уже клиент? Получите карту в 4 клика в приложении.
         </p>
         <Screen1Hero />
         <button type="button" className="button primary" onClick={onNext}>
