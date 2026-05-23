@@ -38,7 +38,7 @@ export default function Screen5({ onNext, onBack, onGoToScreen, answers }) {
           <div className="card-header">
             <h3 className="card-name">Альфа-Карта Первая</h3>
             <p className="card-reason">
-              Идеально для первого кредита: низкий лимит, льготный период 60 дней, кэшбэк на повседневные
+              Идеально для первой кредитной карты: низкий лимит, льготный период 60 дней, кэшбэк на повседневные
               покупки
             </p>
           </div>

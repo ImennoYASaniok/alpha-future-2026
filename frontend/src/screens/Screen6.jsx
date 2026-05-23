@@ -1,6 +1,6 @@
 const SAVE_MAIL_SUBJECT = encodeURIComponent('Прогноз: первая кредитная карта')
 const SAVE_MAIL_BODY = encodeURIComponent(
-  'Сохранил результат из прототипа «Первый кредит без страха». (Тело письма можно дополнить вручную.)'
+  'Сохранил результат из прототипа «Первая кредитная карта без страха». (Тело письма можно дополнить вручную.)'
 )
 
 export default function Screen6({ onBack, onRestart }) {

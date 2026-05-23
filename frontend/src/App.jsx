@@ -86,6 +86,7 @@ export default function App() {
         <Screen4
           onNext={nextScreen}
           onBack={prevScreen}
+          answers={answers}
         />
       )}
       {currentScreen === 5 && (
